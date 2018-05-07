@@ -72,7 +72,8 @@ class Filter extends Component {
     return (
       <div style={defaultStyle}>
         <img alt=""/>
-        <input type="text"/>
+        <input type="text" onKeyUp={event => 
+          this.props.onTextChange(event.target.value)}/>
       </div>
     );
   }
@@ -98,14 +99,18 @@ class Contacts extends Component {
 class App extends Component {
   constructor() {
     super();
-    this.state = {serverData: {}}
+    this.state = {
+      serverData: {},
+      filterString: ''
+    }
   }
   componentDidMount() {
     setTimeout(() => {
       this.setState({serverData: fakeServerData});
-    }, 1000)
+    }, 1000);
   }
   render() {
+
     return (
       <div className="App">
         {this.state.serverData.user ?
@@ -115,8 +120,13 @@ class App extends Component {
             </h1>
             <ContactCounter contacts={this.state.serverData.user.contacts}/>
             <NumbersCounter contacts={this.state.serverData.user.contacts}/>
-            <Filter/>
-            {this.state.serverData.user.contacts.map(contacts =>
+            <Filter onTextChange={text => 
+              this.setState({filterString: text}
+              )}/>
+            {this.state.serverData.user.contacts.filter(contacts => 
+              contacts.name.toLowerCase().includes(
+                this.state.filterString.toLowerCase())
+            ).map(contacts =>
               <Contacts contacts={contacts} />
             )}
           </div> : <h1 style={defaultStyle}>Loading...</h1>
