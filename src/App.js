@@ -6,7 +6,7 @@ let defaultStyle = {
 };
 let fakeServerData = {
   user: {
-    name: 'David',
+    name: 'My',
     contacts:[
       {
         name: 'My favorites',
@@ -59,7 +59,6 @@ class NumbersCounter extends Component {
     let allNumbers = this.props.contacts.reduce((persons, eachContact) => {
       return persons.concat(eachContact.persons);
     }, []);
-    // let totalNumbers = 
     return (
       <div style={{...defaultStyle, width:'40%', display: 'inline-block'}}>
         <h2>{allNumbers.length} phone numbers</h2>
@@ -81,11 +80,16 @@ class Filter extends Component {
 
 class Contacts extends Component {
   render() {
+    let contacts = this.props.contacts;
     return (
       <div style={{...defaultStyle, display: 'inline-block', width: "25%"}}>
         <img alt=""/>
-        <h3>Playlist Name</h3>
-        <ul><li>Song 1</li><li>Song 2</li><li>Song 3</li></ul>
+        <h3>{contacts.name}</h3>
+        <ul>
+          {contacts.persons.map(person =>
+            <li>{person.name}</li>
+          )}
+          </ul>
       </div>
     );
   }
@@ -107,15 +111,14 @@ class App extends Component {
         {this.state.serverData.user ?
           <div>
             <h1 style={{...defaultStyle, 'fontSize': '54px'}}>
-              {this.state.serverData.user.name}'s Address Book
+              {this.state.serverData.user.name} Address Book
             </h1>
             <ContactCounter contacts={this.state.serverData.user.contacts}/>
             <NumbersCounter contacts={this.state.serverData.user.contacts}/>
             <Filter/>
-            <Contacts/>
-            <Contacts/>
-            <Contacts/>
-            <Contacts/>
+            {this.state.serverData.user.contacts.map(contacts =>
+              <Contacts contacts={contacts} />
+            )}
           </div> : <h1 style={defaultStyle}>Loading...</h1>
         }
       </div>
