@@ -110,7 +110,11 @@ class App extends Component {
     }, 1000);
   }
   render() {
-
+    let contactsToRender = this.state.serverData.user ? this.state.serverData.user.contacts
+      .filter(contacts => 
+        contacts.name.toLowerCase().includes(
+          this.state.filterString.toLowerCase())
+      ) : []
     return (
       <div className="App">
         {this.state.serverData.user ?
@@ -118,15 +122,12 @@ class App extends Component {
             <h1 style={{...defaultStyle, 'fontSize': '54px'}}>
               {this.state.serverData.user.name} Address Book
             </h1>
-            <ContactCounter contacts={this.state.serverData.user.contacts}/>
-            <NumbersCounter contacts={this.state.serverData.user.contacts}/>
+            <ContactCounter contacts={contactsToRender}/>
+            <NumbersCounter contacts={contactsToRender}/>
             <Filter onTextChange={text => 
               this.setState({filterString: text}
               )}/>
-            {this.state.serverData.user.contacts.filter(contacts => 
-              contacts.name.toLowerCase().includes(
-                this.state.filterString.toLowerCase())
-            ).map(contacts =>
+            {contactsToRender.map(contacts =>
               <Contacts contacts={contacts} />
             )}
           </div> : <h1 style={defaultStyle}>Loading...</h1>
